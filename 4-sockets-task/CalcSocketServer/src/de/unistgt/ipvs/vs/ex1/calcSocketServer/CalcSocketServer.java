@@ -2,6 +2,9 @@ package de.unistgt.ipvs.vs.ex1.calcSocketServer;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Extend the run-method of this class as necessary to complete the assignment.
@@ -13,13 +16,14 @@ public class CalcSocketServer extends Thread {
 
 	public CalcSocketServer(int port) {
 		this.srvSocket = null;
-		this.port      = port;
+		this.port = port;
 	}
-	
+
 	@Override
 	public void interrupt() {
 		try {
-			if (srvSocket != null) srvSocket.close();
+			if (srvSocket != null)
+				srvSocket.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -34,5 +38,13 @@ public class CalcSocketServer extends Thread {
 
 		// TODO
 		// Start listening server socket ..
+		try {
+			srvSocket = new ServerSocket(port);
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 }
