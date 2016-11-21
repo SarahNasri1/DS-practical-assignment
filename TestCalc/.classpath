@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CalcSocketClient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CalcSocketServer"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CalcRMIClient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CalcRMIServer"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
