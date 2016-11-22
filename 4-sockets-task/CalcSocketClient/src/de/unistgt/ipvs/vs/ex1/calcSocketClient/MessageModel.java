@@ -1,4 +1,4 @@
-package de.unistgt.ipvs.vs.ex1.calcSocketServer;
+package de.unistgt.ipvs.vs.ex1.calcSocketClient;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -19,22 +19,23 @@ public class MessageModel {
 		public String toString() {
 			return value;
 		}
+
 		public static Operators fromString(String text) {
-		    if (text != null) {
-		      for (Operators b : Operators.values()) {
-		        if (text.equalsIgnoreCase(b.toString())) {
-		          return b;
-		        }
-		      }
-		    }
-		    return null;
-		  }
+			if (text != null) {
+				for (Operators b : Operators.values()) {
+					if (text.equalsIgnoreCase(b.toString())) {
+						return b;
+					}
+				}
+			}
+			return null;
+		}
 	}
 
 	// list of all valid params in message
-	private ArrayList<Object> params = new ArrayList<Object>();
+	private ArrayList<Object> params;
 	// list of all invalid params in message
-	private ArrayList<Object> invalidParams = new ArrayList<Object>();
+	private ArrayList<Object> invalidParams;
 
 	// Just a constructor to create an empty Message object
 	public MessageModel() {
@@ -51,7 +52,8 @@ public class MessageModel {
 		Matcher m = messagePattern.matcher(message);
 		if (m.find()) {
 			String filteredMessage = m.group(0);
-			String length = filteredMessage.substring(filteredMessage.indexOf("<")+1,filteredMessage.indexOf("<")+3);
+			String length = filteredMessage.substring(filteredMessage.indexOf("<") + 1,
+					filteredMessage.indexOf("<") + 3);
 			if (!isNumber(length))
 				throw new RuntimeException("invalid length portion: " + length);
 			int l = Integer.valueOf(length);
@@ -65,12 +67,11 @@ public class MessageModel {
 			for (int i = 0; i < extractedParams.length; i++) {
 				try {
 					// check if passed param is valid else throw exception
-					if (!isvalidParam(extractedParams[i].toString())){
+					if (!isvalidParam(extractedParams[i].toString())) {
 						addInvalidParam(extractedParams[i].toString());
-						System.out.println("SERVER: invalid param "+ extractedParams[i].toString());
-					}
-					else
-					addParam(extractedParams[i]);
+						System.out.println("CLIENT: invalid param: " + extractedParams[i].toString());
+					} else
+						addParam(extractedParams[i]);
 				} catch (Exception e) {
 					e.printStackTrace(System.err);
 				}
@@ -88,7 +89,7 @@ public class MessageModel {
 		// check if params is still not initiated
 		if (params == null)
 			params = new ArrayList<Object>();
-		
+
 		// add the param
 		this.params.add(param);
 	}
@@ -130,9 +131,9 @@ public class MessageModel {
 		msgContent = msgContent.substring(0, msgContent.length() - 1);
 
 		/*
-		 * check if message size is greater than 100 Which means that the
-		 * first two part containing length will be greater than two
-		 * character which is invalid state
+		 * check if message size is greater than 100 Which means that the first
+		 * two part containing length will be greater than two character which
+		 * is invalid state
 		 */
 		if (msgContent.length() > 99)
 			return null;
@@ -141,7 +142,7 @@ public class MessageModel {
 	}
 
 	public static void main(String[] args) {
-		MessageModel m = new MessageModel("<13: SUB 10 >");
+		MessageModel m = new MessageModel("<08:RDY>");
 		System.out.println(m.toString() == null ? "invalid" : m.toString());
 		m = new MessageModel("<16:ADD 23 9 -1>");
 		System.out.println(m.toString() == null ? "invalid" : m.toString());
@@ -153,16 +154,17 @@ public class MessageModel {
 
 	}
 
-	public ArrayList<Object> getInvalidParams() {		
+	public ArrayList<Object> getInvalidParams() {
 		return invalidParams;
 	}
+
 	public void setParams(ArrayList<Object> params) {
-		this.params = (ArrayList<Object>) params.clone();
+		this.params = params;
 	}
 
 	public void addInvalidParam(Object invalidParam) {
-		if(invalidParams == null)
-			invalidParams= new ArrayList<Object>();
+		if (invalidParams == null)
+			invalidParams = new ArrayList<Object>();
 		this.invalidParams.add(invalidParam);
 	}
 
