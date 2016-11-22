@@ -137,6 +137,9 @@ public class CalcSocketServer extends Thread {
 					}
 
 				}
+				MessageModel finMsg= new MessageModel();
+				finMsg.addParam(Operators.Finish.toString());
+				writer.println(finMsg);
 			}
 			// close the socket when the connection is closed by client
 			clientSocket.close();

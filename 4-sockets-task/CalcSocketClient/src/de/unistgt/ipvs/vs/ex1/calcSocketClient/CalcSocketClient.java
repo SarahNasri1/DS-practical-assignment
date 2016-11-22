@@ -84,32 +84,23 @@ public class CalcSocketClient {
 		writer.println(request);
 		
 		try {
-			String msg = reader.readLine();
-			System.out.println("CLIENT: String received is "+msg);
-			MessageModel receivedMsg = new MessageModel(msg);
-			
-			if(receivedMsg.getParams().get(0).toString().equals(Operators.Error.toString())){
+			while(true){
+				String msg = reader.readLine();
+				System.out.println("CLIENT: String received is "+msg);
+				MessageModel receivedMsg = new MessageModel(msg);
 				
-				rcvdErs+= receivedMsg.getInvalidParams().size();
-				receivedMsg = new MessageModel(reader.readLine());
-				System.out.println("CLIENT: String received is "+receivedMsg);
-				if(receivedMsg.getParams().get(0).toString().equals(Operators.Ok.toString()) )
-					rcvdOKs+=receivedMsg.getParams().size()-1;
-			}			
-			else if(receivedMsg.getParams().get(0).toString().equals(Operators.Ok.toString())){
-				if(receivedMsg.getParams().size()==3 && receivedMsg.getParams().get(1).toString().equals(Operators.Result.toString()))
-					calcRes= Integer.parseInt(receivedMsg.getParams().get(2).toString());
-				else{
-					rcvdOKs+=receivedMsg.getParams().size()-1;
-					if(request.toUpperCase().contains(Operators.Result.toString())){
-						receivedMsg = new MessageModel(reader.readLine());
-						System.out.println("CLIENT: String received is "+receivedMsg);
-						if(receivedMsg.getParams().size()==3 && receivedMsg.getParams().get(1).toString().equals(Operators.Result.toString()))
-							calcRes= Integer.parseInt(receivedMsg.getParams().get(2).toString());
-					}
+				if(receivedMsg.getParams().get(0).toString().equals(Operators.Error.toString())){				
+					rcvdErs+= receivedMsg.getInvalidParams().size();			
+				}			
+				else if(receivedMsg.getParams().get(0).toString().equals(Operators.Ok.toString())){
+					if(receivedMsg.getParams().size()==3 && receivedMsg.getParams().get(1).toString().equals(Operators.Result.toString()))
+						calcRes= Integer.parseInt(receivedMsg.getParams().get(2).toString());
+					else
+						rcvdOKs+=receivedMsg.getParams().size()-1;				
+				}else if(receivedMsg.getParams().get(0).toString().equalsIgnoreCase(Operators.Finish.toString())){
+					break;
 				}
-			}
-			
+			}			
 			System.out.println("CLIENT: Ers "+rcvdErs+", oks: "+rcvdOKs+", res: "+calcRes);
 			return true;
 		} catch (IOException e) {
