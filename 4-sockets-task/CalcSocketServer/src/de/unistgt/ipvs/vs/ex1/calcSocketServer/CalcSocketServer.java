@@ -49,12 +49,13 @@ public class CalcSocketServer extends Thread {
 			Operators operation = null;
 			
 			// initialize calculator
-			CalculationImpl calculator = new CalculationImpl();
-			
+			CalculationImpl calculator = new CalculationImpl();			
 			System.out.println("SERVER: "+"Server running on port "+ port);
+			
 			// accept client Connection
 			Socket clientSocket = srvSocket.accept();
 			System.out.println("SERVER: "+"Client connected");
+			
 			// create writer to send to client
 			PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
 
@@ -66,6 +67,7 @@ public class CalcSocketServer extends Thread {
 			readyMessage.addParam(Operators.Ready);
 			writer.println(readyMessage);
 			System.out.println("SERVER: "+readyMessage+" Sent.");
+			
 			String read = "";
 			while ((read = reader.readLine()) != null) {
 				System.out.println("SERVER: "+read+" Received.");
@@ -90,7 +92,8 @@ public class CalcSocketServer extends Thread {
 						break;
 					}
 				}
-				if(!msg.getParams().get(0).toString().equalsIgnoreCase(Operators.Result.toString())){
+				//check if the only parameter is RES then do not send Ack
+				if(!(msg.getParams().get(0).toString().equalsIgnoreCase(Operators.Result.toString()) && msg.getParams().size()==1)){
 					MessageModel okMsg = new MessageModel();
 					okMsg.setParams(msg.getParams());
 					if(Res!=-1)

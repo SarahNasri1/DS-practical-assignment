@@ -123,7 +123,7 @@ public class MessageModel {
 	// number
 	public static boolean isNumber(String value) {
 		try {
-			Double.valueOf(value);
+			Integer.valueOf(value);
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -147,7 +147,7 @@ public class MessageModel {
 		 * first two part containing length will be greater than two
 		 * character which is invalid state
 		 */
-		if (msgContent.length() > 99)
+		if ((msgContent.length()+5) > 99)
 			return null;
 		// create the message String
 		return "<" + String.format("%02d", msgContent.length() + 5) + ":" + msgContent + ">";

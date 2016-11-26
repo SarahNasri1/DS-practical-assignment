@@ -18,6 +18,7 @@ public class CalcSocketClient {
 	private int rcvdOKs; // --> Number of valid message contents
 	private int rcvdErs; // --> Number of invalid message contents
 	private int calcRes; // --> Calculation result (cf. 'RES')
+	
 	private Socket socket = null;
 	private PrintWriter writer = null;
 	private BufferedReader reader = null;
@@ -57,7 +58,7 @@ public class CalcSocketClient {
 			MessageModel connectionMessage = new MessageModel(reader.readLine());
 			System.out.println("CLIENT: "+ connectionMessage+" Received.");
 			//if message is ready return true else return true
-			if(connectionMessage.getParams().get(0).toString().equals(Operators.Ready.toString())){
+			if(connectionMessage.getParams().get(0).toString().equalsIgnoreCase(Operators.Ready.toString())){
 				return true;
 			}else{
 				return false;
