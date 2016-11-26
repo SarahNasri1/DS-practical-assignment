@@ -32,7 +32,7 @@ public class CalcRmiServer extends Thread {
 			System.setProperty("java.rmi.server.hostname",regHost);
 			//start registry on default port
 			Registry registry = LocateRegistry.createRegistry(1099); 
-			//rebind the object to the registry with this name
+			//rebind the object in the registry with the specified name
 			registry.rebind (objName, factory); 
 			System.out.println("RMI Server is ready!");
 		} catch(Exception e){
