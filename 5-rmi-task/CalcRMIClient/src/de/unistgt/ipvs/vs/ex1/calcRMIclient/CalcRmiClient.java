@@ -35,7 +35,7 @@ public class CalcRmiClient {
 	public boolean init(String url) {
 		// TODO
 		try{  
-			//lookup the registry and return a stub of ICalculationFactory
+			//lookup the remote registry and return a stub of ICalculationFactory
 			ICalculationFactory stub=(ICalculationFactory)Naming.lookup(url); 
 			//get a new ICalculation session
 			this.calc = stub.getSession();
