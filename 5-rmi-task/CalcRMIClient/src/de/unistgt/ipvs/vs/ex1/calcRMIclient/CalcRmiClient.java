@@ -23,6 +23,7 @@ public class CalcRmiClient {
 	public int getCalcRes() {
 		// TODO		
 		try {
+			//get the result of this Icalculation object
 			return this.calc.getResult();
 		} catch (RemoteException e) {
 			System.err.println("Error performing requested operation on remote object: " + e.getMessage());
@@ -34,7 +35,9 @@ public class CalcRmiClient {
 	public boolean init(String url) {
 		// TODO
 		try{  
+			//lookup the registry and return a stub of ICalculationFactory
 			ICalculationFactory stub=(ICalculationFactory)Naming.lookup(url); 
+			//get a new ICalculation session
 			this.calc = stub.getSession();
 			return true;
 		}catch(Exception e){
@@ -46,7 +49,7 @@ public class CalcRmiClient {
 
 	public boolean calculate(CalculationMode calcMode, Collection<Integer> numbers) {
 		// TODO
-
+		//perform requested operation on the collection object.
 		try {
 			switch(calcMode){
 			case ADD:
