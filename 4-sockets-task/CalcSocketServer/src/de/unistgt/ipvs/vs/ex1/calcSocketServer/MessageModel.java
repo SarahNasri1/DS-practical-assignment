@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/**
+ *  
+ *a model class for a message that creates new messages and parse 
+ *string into messages.
+ *
+ */
 public class MessageModel {
 
 	// enum for all valid operators
@@ -19,7 +26,7 @@ public class MessageModel {
 		public String toString() {
 			return value;
 		}
-		//GEt enum item from string value
+		//Get enum item from string value
 		public static Operators fromString(String text) {
 		    if (text != null) {
 		      for (Operators b : Operators.values()) {
@@ -71,11 +78,10 @@ public class MessageModel {
 			for (int i = 0; i < extractedParams.length; i++) {
 				try {
 					// check if passed param is valid else throw exception
-					if (!isvalidParam(extractedParams[i].toString())){
+					if (!isvalidParam(extractedParams[i].toString())) {
 						addInvalidParam(extractedParams[i].toString());
 						System.out.println("SERVER: invalid param "+ extractedParams[i].toString());
-					}
-					else
+					} else
 						//add the valid parameter to list of params
 						addParam(extractedParams[i]);
 				} catch (Exception e) {
@@ -150,13 +156,14 @@ public class MessageModel {
 	public ArrayList<Object> getInvalidParams() {		
 		return invalidParams;
 	}
+
 	public void setParams(ArrayList<Object> params) {
 		this.params = (ArrayList<Object>) params.clone();
 	}
 
 	public void addInvalidParam(Object invalidParam) {
-		if(invalidParams == null)
-			invalidParams= new ArrayList<Object>();
+		if (invalidParams == null)
+			invalidParams = new ArrayList<Object>();
 		this.invalidParams.add(invalidParam);
 	}
 

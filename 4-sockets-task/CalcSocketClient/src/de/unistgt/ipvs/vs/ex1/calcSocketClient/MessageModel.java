@@ -4,6 +4,13 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+/**
+ *  
+ *a model class for a message that creates new messages and parse 
+ *string into messages.
+ *
+ */
 public class MessageModel {
 
 	// enum for all valid operators
@@ -15,21 +22,21 @@ public class MessageModel {
 		private Operators(String val) {
 			value = val;
 		}
-
+		//Get the string value of enum item
 		public String toString() {
 			return value;
 		}
-
+		//Get enum item from string value
 		public static Operators fromString(String text) {
-			if (text != null) {
-				for (Operators b : Operators.values()) {
-					if (text.equalsIgnoreCase(b.toString())) {
-						return b;
-					}
-				}
-			}
-			return null;
-		}
+		    if (text != null) {
+		      for (Operators b : Operators.values()) {
+		        if (text.equalsIgnoreCase(b.toString())) {
+		          return b;
+		        }
+		      }
+		    }
+		    return null;
+		  }
 	}
 
 	// list of all valid params in message
@@ -48,18 +55,22 @@ public class MessageModel {
 	public MessageModel(String message) {
 		if (message.isEmpty())
 			return;
+		// extract the message between <>
 		Pattern messagePattern = Pattern.compile("<[0-9][0-9]:.+>");
 		Matcher m = messagePattern.matcher(message);
 		if (m.find()) {
 			String filteredMessage = m.group(0);
-			String length = filteredMessage.substring(filteredMessage.indexOf("<") + 1,
-					filteredMessage.indexOf("<") + 3);
+			//extract the message content
+			String length = filteredMessage.substring(filteredMessage.indexOf("<")+1,filteredMessage.indexOf("<")+3);
+			//check the length if not number throw exception
 			if (!isNumber(length))
 				throw new RuntimeException("invalid length portion: " + length);
 			int l = Integer.valueOf(length);
+			//Check the consistency of the length
 			if (l != filteredMessage.length())
 				throw new RuntimeException("Not consistent length of Message(" + filteredMessage + "): received is "
 						+ length + " while actual is " + filteredMessage.length());
+			//split the message contents by space to get array of all params
 			Pattern ParamsPattern = Pattern.compile("\\s+");
 			String msgContent = filteredMessage
 					.substring(filteredMessage.indexOf(":") + 1, filteredMessage.length() - 1).trim();
@@ -71,6 +82,7 @@ public class MessageModel {
 						addInvalidParam(extractedParams[i].toString());
 						System.out.println("CLIENT: invalid param: " + extractedParams[i].toString());
 					} else
+						//add the valid parameter to list of params
 						addParam(extractedParams[i]);
 				} catch (Exception e) {
 					e.printStackTrace(System.err);
@@ -89,7 +101,7 @@ public class MessageModel {
 		// check if params is still not initiated
 		if (params == null)
 			params = new ArrayList<Object>();
-
+		
 		// add the param
 		this.params.add(param);
 	}
@@ -131,9 +143,9 @@ public class MessageModel {
 		msgContent = msgContent.substring(0, msgContent.length() - 1);
 
 		/*
-		 * check if message size is greater than 100 Which means that the first
-		 * two part containing length will be greater than two character which
-		 * is invalid state
+		 * check if message size is greater than 100 Which means that the
+		 * first two part containing length will be greater than two
+		 * character which is invalid state
 		 */
 		if (msgContent.length() > 99)
 			return null;
@@ -141,25 +153,12 @@ public class MessageModel {
 		return "<" + String.format("%02d", msgContent.length() + 5) + ":" + msgContent + ">";
 	}
 
-	public static void main(String[] args) {
-		MessageModel m = new MessageModel("<08:RDY>");
-		System.out.println(m.toString() == null ? "invalid" : m.toString());
-		m = new MessageModel("<16:ADD 23 9 -1>");
-		System.out.println(m.toString() == null ? "invalid" : m.toString());
-		m = new MessageModel("<18:MUL 2 SUB 13 >");
-		System.out.println(m.toString() == null ? "invalid" : m.toString());
-		// for (int i = 0; i < params.length; i++) {
-		// System.out.println(params[i]);
-		// }
-
-	}
-
-	public ArrayList<Object> getInvalidParams() {
+	public ArrayList<Object> getInvalidParams() {		
 		return invalidParams;
 	}
 
 	public void setParams(ArrayList<Object> params) {
-		this.params = params;
+		this.params = (ArrayList<Object>) params.clone();
 	}
 
 	public void addInvalidParam(Object invalidParam) {
