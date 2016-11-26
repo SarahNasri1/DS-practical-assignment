@@ -62,7 +62,7 @@ public class CalcSocketServer extends Thread {
 			// create reader to read from Client
 			BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
-			// Send Readyessage
+			// Send Readymessage
 			MessageModel readyMessage = new MessageModel();
 			readyMessage.addParam(Operators.Ready);
 			writer.println(readyMessage);
