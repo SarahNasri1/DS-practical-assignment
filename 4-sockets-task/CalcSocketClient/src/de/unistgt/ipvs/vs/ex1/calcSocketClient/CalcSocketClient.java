@@ -45,17 +45,21 @@ public class CalcSocketClient {
 
 	public boolean connectTo(String srvIP, int srvPort) {
 		try {
+			//connect to server
 			socket = new Socket(srvIP, srvPort);
 			System.out.println("CLIENT: Connected to "+srvIP+":"+srvPort );
+			
+			//initiate the reader and the writer to socket
 			writer = new PrintWriter(socket.getOutputStream(),true);
 			reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			
+			//receive the ready message from the server  
 			MessageModel connectionMessage = new MessageModel(reader.readLine());
 			System.out.println("CLIENT: "+ connectionMessage+" Received.");
+			//if message is ready return true else return true
 			if(connectionMessage.getParams().get(0).toString().equals(Operators.Ready.toString())){
-				System.out.println("CLIENT: returning true");
 				return true;
 			}else{
-				System.out.println("CLIENT: returning false");
 				return false;
 			}
 		} catch (UnknownHostException e) {
@@ -70,41 +74,52 @@ public class CalcSocketClient {
 
 	public boolean disconnect() {
 		try {
+			//Close the connection and return true
 			socket.close();
 			return true;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			//return false if exception occurs
 			return false;
 		}
 		
 	}
 
 	public boolean calculate(String request) {
+		//Send the message to the server
 		writer.println(request);
 		
 		try {
+			//Receive messages from the server until a FIN messae is received
 			while(true){
+				//read the received message
 				String msg = reader.readLine();
 				System.out.println("CLIENT: String received is "+msg);
+				
+				//Parse the received message
 				MessageModel receivedMsg = new MessageModel(msg);
 				
+				//Error message received so increment counter bu number of invalid params
 				if(receivedMsg.getParams().get(0).toString().equals(Operators.Error.toString())){				
 					rcvdErs+= receivedMsg.getInvalidParams().size();			
 				}			
+				//ok message is received then it is either acknowledgement or result
 				else if(receivedMsg.getParams().get(0).toString().equals(Operators.Ok.toString())){
+					//checking if RES is a param then set the result value
 					if(receivedMsg.getParams().size()==3 && receivedMsg.getParams().get(1).toString().equals(Operators.Result.toString()))
 						calcRes= Integer.parseInt(receivedMsg.getParams().get(2).toString());
 					else
-						rcvdOKs+=receivedMsg.getParams().size()-1;				
+						//else increment the ok counter
+						rcvdOKs+=receivedMsg.getParams().size()-1;
+				//FIN message is received just break the loop
 				}else if(receivedMsg.getParams().get(0).toString().equalsIgnoreCase(Operators.Finish.toString())){
 					break;
 				}
 			}			
-			System.out.println("CLIENT: Ers "+rcvdErs+", oks: "+rcvdOKs+", res: "+calcRes);
+			//return true after loop break
 			return true;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			//return false if any exception occurs
 			e.printStackTrace();
 			return false;
 		}

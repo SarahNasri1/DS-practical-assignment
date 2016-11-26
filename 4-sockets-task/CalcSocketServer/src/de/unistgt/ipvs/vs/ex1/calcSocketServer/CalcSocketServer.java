@@ -83,6 +83,7 @@ public class CalcSocketServer extends Thread {
 
 				// send ok message with valid params
 				int Res= -1;
+				//search for Res parameter to not include in the ok Message
 				for (int i = msg.getParams().size()-1; i >=0 ; i--) {
 					if(msg.getParams().get(i).toString().equalsIgnoreCase(Operators.Result.toString())){
 						Res = i;
@@ -137,6 +138,7 @@ public class CalcSocketServer extends Thread {
 					}
 
 				}
+				//Send FIN Message
 				MessageModel finMsg= new MessageModel();
 				finMsg.addParam(Operators.Finish.toString());
 				writer.println(finMsg);
