@@ -17,6 +17,7 @@ public class CalculationImplFactory extends UnicastRemoteObject implements ICalc
 	public CalculationImplFactory() throws RemoteException {
 		super();
 	}
+	//get an instance of ICalculation object
 	public ICalculation getSession() throws RemoteException {
 		return new CalculationImpl();
 	}

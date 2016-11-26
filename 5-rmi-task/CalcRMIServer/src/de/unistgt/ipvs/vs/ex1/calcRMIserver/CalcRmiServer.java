@@ -26,9 +26,13 @@ public class CalcRmiServer extends Thread {
 		}
 		// TODO
 		try {
+			//create an object of CalculationImplFactory
 			CalculationImplFactory factory = new CalculationImplFactory();
+			//Register this host as the rmi server
 			System.setProperty("java.rmi.server.hostname",regHost);
-			Registry registry = LocateRegistry.createRegistry(1099); //start registry on default port
+			//start registry on default port
+			Registry registry = LocateRegistry.createRegistry(1099); 
+			//rebind the object to the registry with this name
 			registry.rebind (objName, factory); 
 			System.out.println("RMI Server is ready!");
 		} catch(Exception e){
